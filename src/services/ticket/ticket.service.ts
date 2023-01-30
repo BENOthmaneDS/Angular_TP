@@ -3,6 +3,7 @@ import { Ticket } from '../../models/ticket';
 import { TICKETS_MOCKED } from '../../mocks/tickets.mock';
 import { BehaviorSubject } from 'rxjs/index';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,10 +22,29 @@ export class TicketService {
   public tickets$: BehaviorSubject<Ticket[]> = new BehaviorSubject(this.ticketList);
 
   constructor() {
+    this.tickets$.next([]);
+  }
+
+  updateTicketsList(ticketList: Ticket[]) {
+    this.tickets$.next(this.ticketList);
   }
 
   addTicket(ticket: Ticket) {
     // You need here to update the list of ticket and then update our observable (Subject) with the new list
-    // More info: https://angular.io/tutorial/toh-pt6#the-searchterms-rxjs-subject
+      // More info: https://angular.io/tutorial/toh-pt6#the-searchterms-rxjs-subject
+    this.ticketList.push(ticket);
+    this.tickets$.next(this.ticketList);
+  }
+
+  archiveTicket(ticket: Ticket) {
+    ticket.archived = true;
+    console.log('Ticket has been Archived successfully');
+  }
+
+  deleteTicket(ticket: Ticket) {
+
+    this.ticketList.splice(this.ticketList.indexOf(ticket), 1);
+
+    this.tickets$.next(this.ticketList);
   }
 }
